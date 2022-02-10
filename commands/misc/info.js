@@ -23,21 +23,21 @@ module.exports = {
 		await interaction.reply({ content: "Choose what info you want to see.", components: [row] })
 		console.log(interaction.user.id)
 
-		const filter = i => i.customId === 'ping' && i.user.id === i.user.id;
+		const filter = i => i.user.id === i.user.id;
 		const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 
 		collector.on('collect', async i => {
-			if (i.customId === 'ping') {
+			if (i.customId == 'ping') {
 				await i.reply({
-					content: "Eat me",
+					content: "pong",
 					ephemeral: false
 				})
-			}else if (i.customId === 'population') {
+			}else if (i.customId == 'population') {
 				await i.reply({
 					content: "Population: you",
 					ephemeral: false
 				})
-			}
+			}else {console.log("no matching interaction")}
 		});
 
 		collector.on('end', collected => {
