@@ -1,5 +1,6 @@
-# Hide the Token, wouldn't want that getting out
+lavalink/
 
+# Hide the Token, wouldn't want that getting out
 config.json
 
 # Logs
