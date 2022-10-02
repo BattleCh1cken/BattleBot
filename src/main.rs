@@ -1,37 +1,45 @@
-use commands::{
-moderation::roles::roles,
-misc::{age::age, ping::ping}};
-use poise::serenity_prelude;
+use std::collections::HashSet;
+use commands::*;
+use poise::serenity_prelude::{self, UserId};
 mod commands;
+mod events;
 
-type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
+type Error = Box<dyn std::error::Error + Send + Sync>;
+
 // User data, which is stored and accessible in all command invocations
 pub struct Data {}
 
-#[poise::command(prefix_command)]
-async fn register(ctx: Context<'_>) -> Result<(), Error> {
-    poise::builtins::register_application_commands_buttons(ctx).await?;
-    Ok(())
-}
+
+
+
+
 
 #[tokio::main]
 async fn main() {
+    //Fetch the bot's token from an environment variable
+    let token = std::env::var("DISCORD_TOKEN").expect("missing token, you nerd");
+    let owner: HashSet<UserId> = HashSet::from([UserId(524768045273448449)]);
+
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
+            listener: |_ctx, event, _framework, _data| {
+                Box::pin(events::event_listener(_ctx, event, _framework, _data))
+            },
             commands: vec![
                 //misc
-                age(),
-                ping(),
+                misc::age::age(),
+                misc::ping::ping(),
                 //moderation
-                roles(),
+                moderation::roles::roles(),
                 //owner
-                register()],
+                owner::register::register(),
+            ],
+            owners: owner,
             ..Default::default()
         })
-        .token(std::env::var("DISCORD_TOKEN").expect("missing DISCORD_TOKEN"))
+        .token(&token)
         .intents(serenity_prelude::GatewayIntents::non_privileged())
         .user_data_setup(move |_ctx, _ready, _framework| Box::pin(async move { Ok(Data {}) }));
-
     framework.run().await.unwrap();
 }
