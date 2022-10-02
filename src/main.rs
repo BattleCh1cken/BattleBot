@@ -1,6 +1,6 @@
-use std::collections::HashSet;
 use commands::*;
 use poise::serenity_prelude::{self, UserId};
+use std::collections::HashSet;
 mod commands;
 mod events;
 
@@ -9,11 +9,6 @@ type Error = Box<dyn std::error::Error + Send + Sync>;
 
 // User data, which is stored and accessible in all command invocations
 pub struct Data {}
-
-
-
-
-
 
 #[tokio::main]
 async fn main() {
@@ -34,6 +29,7 @@ async fn main() {
                 moderation::roles::roles(),
                 //owner
                 owner::register::register(),
+                //sushi
             ],
             owners: owner,
             ..Default::default()
