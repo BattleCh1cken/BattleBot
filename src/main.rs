@@ -1,9 +1,9 @@
 use commands::*;
-use poise::serenity_prelude::{self, UserId};
-use std::collections::HashSet;
+use poise::serenity_prelude;
 mod commands;
 mod events;
-
+mod config;
+use config::Config;
 type Context<'a> = poise::Context<'a, Data, Error>;
 type Error = Box<dyn std::error::Error + Send + Sync>;
 
@@ -12,10 +12,7 @@ pub struct Data {}
 
 #[tokio::main]
 async fn main() {
-    //Fetch the bot's token from an environment variable
-    let token = std::env::var("DISCORD_TOKEN").expect("missing token, you nerd");
-    let owner: HashSet<UserId> = HashSet::from([UserId(524768045273448449)]);
-
+    let config = Config::from_environment().expect("error in config");
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
             listener: |_ctx, event, _framework, _data| {
@@ -31,10 +28,10 @@ async fn main() {
                 owner::register::register(),
                 //sushi
             ],
-            owners: owner,
+            owners: config.owner_id,
             ..Default::default()
         })
-        .token(&token)
+        .token(config.discord_token)
         .intents(serenity_prelude::GatewayIntents::non_privileged())
         .user_data_setup(move |_ctx, _ready, _framework| Box::pin(async move { Ok(Data {}) }));
     framework.run().await.unwrap();

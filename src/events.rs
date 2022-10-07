@@ -11,7 +11,7 @@ pub async fn event_listener(
 
     match event {
         poise::Event::Ready { data_about_bot } => {
-            ready(data_about_bot);
+            ready(data_about_bot, _ctx, _framework).await?;
         }
         _ => {
             println!("{}", event.name());
@@ -21,13 +21,12 @@ pub async fn event_listener(
     Ok(())
 }
 //ready
-fn ready(
+async fn ready(
     data: &poise::serenity_prelude::Ready,
-    //ctx: &serenity_prelude::Context,
-    //framework: poise::FrameworkContext<'_, Data, Error>,
-    ) {
+    ctx: &serenity_prelude::Context,
+    framework: poise::FrameworkContext<'_, Data, Error>,
+) -> Result<(), Error> {
     println!("{} is connected!", data.user.name);
-    /*
     println!("Registering slash commands!");
     let commands = &framework.options().commands;
     let create_commands = poise::builtins::create_application_commands(&commands);
@@ -36,6 +35,5 @@ fn ready(
         b
     })
     .await?;
-    */
-    //Ok(())
+    Ok(())
 }
