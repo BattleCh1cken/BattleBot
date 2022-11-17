@@ -1,18 +1,18 @@
 use commands::*;
 use poise::serenity_prelude;
 mod commands;
-mod events;
 mod config;
+mod events;
 use config::Config;
-type Context<'a> = poise::Context<'a, Data, Error>;
+mod utils;
 type Error = Box<dyn std::error::Error + Send + Sync>;
-
+use crate::utils::context::Context;
 // User data, which is stored and accessible in all command invocations
 pub struct Data {}
 
 #[tokio::main]
 async fn main() {
-    let config = Config::from_environment().expect("error in config");
+    let config: Config = Config::from_environment().expect("error in config");
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
             listener: |_ctx, event, _framework, _data| {
@@ -22,13 +22,14 @@ async fn main() {
                 //misc
                 misc::age::age(),
                 misc::ping::ping(),
+                misc::boop(),
                 //moderation
                 moderation::roles::roles(),
                 //owner
                 owner::register::register(),
                 //sushi
             ],
-            owners: config.owner_id,
+            owners: config.owner_id.clone(),
             ..Default::default()
         })
         .token(config.discord_token)

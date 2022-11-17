@@ -1,5 +1,6 @@
 use poise::serenity_prelude::{GuildId, RoleId, UserId};
 use std::collections::HashSet;
+#[derive(Debug, Clone)]
 pub struct Config {
     pub discord_token: String,
     pub guild_id: GuildId,
@@ -8,7 +9,6 @@ pub struct Config {
     pub roles_color: Vec<RoleId>,
     pub roles_lang: Vec<RoleId>,
 }
-
 impl Config {
     pub fn from_environment() -> Option<Config> {
         Some(Config {
@@ -26,7 +26,11 @@ impl Config {
                     .unwrap(),
             )]),
 
-            roles_color: vec![],
+            roles_color: std::env::var("ROLES_COLOR")
+                .expect("no color roles")
+                .split(",")
+                .map(|r| RoleId::from(r.parse::<u64>().expect("no role")))
+                .collect(),
             roles_lang: vec![],
         })
     }

@@ -1,4 +1,4 @@
-use crate::{Context, Error};
+use crate::{utils::context::Context, Error};
 ///returns pong
 #[poise::command(slash_command,)]
 pub async fn ping(

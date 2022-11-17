@@ -9,3 +9,4 @@ edition = "2021"
 serenity = { version = "0.11.5", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
 tokio = { version = "1.21.1", features = ["macros", "rt-multi-thread"] }
 poise = "0.3.0"
+extend = "1.1"
