@@ -24,7 +24,7 @@
 
         devShell = with pkgs; mkShell {
           shellHook = ''
-            export $(cat .env)
+            #export $(cat .env)
           '';
           buildInputs = with pkgs; [
             (pkgs.fenix.complete.withComponents [
